@@ -34,6 +34,8 @@ app.use(menuRoutes)
 app.use(orderRoutes)
 app.use(reservationRoutes)
 app.use(loyaltyRoutes)
+app.use(inventoryRoutes)
+app.use(deliveryRoutes)
 app.use(analyticsRoutes)
 
 app.use(errorHandler)
