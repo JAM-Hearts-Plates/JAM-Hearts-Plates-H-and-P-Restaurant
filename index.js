@@ -2,9 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import errorHandler from "./middlewares/errorHandler.js"
-import appError from "./utils/appError.js";
-import morgan from "morgan";
+// import errorHandler from "./middlewares/errorHandler.js"
+// import appError from "./utils/appError.js";
+// import morgan from "morgan";
 
 // importing routes
 import authRoutes from "./routes/authRoutes.js";
@@ -16,6 +16,7 @@ import loyaltyRoutes from "./routes/loyaltyRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 import deliveryRoutes from "./routes/deliveryRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+import tableRoutes from "./routes/tableRoutes.js"
 
 
 // making a database connection
@@ -44,11 +45,12 @@ app.use(loyaltyRoutes)
 app.use(inventoryRoutes)
 app.use(deliveryRoutes)
 app.use(analyticsRoutes)
+app.use(tableRoutes)
 
-// Handle undefined routes
-app.all("*", (req, res, next) => {
-  next(new appError(`Can't find ${req.originalUrl} on this server`, 404));
-});
+// // Handle undefined routes
+// app.all("*", (req, res, next) => {
+//   next(new appError(`Can't find ${req.originalUrl} on this server`, 404));
+// });
 
 app.use(errorHandler)
 

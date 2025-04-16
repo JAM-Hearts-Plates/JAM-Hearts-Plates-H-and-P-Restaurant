@@ -2,6 +2,7 @@ import { OrderModel } from "../models/order.js";
 import { MenuModel } from "../models/menu.js";
 import { LoyaltyModel } from "../models/loyalty.js";
 import { UserModel } from "../models/user.js";
+import {TableModel} from "../models/table.js"
 import appError from "../utils/appError.js";
 import {getDistance} from "../utils/distanceCalculator.js"
 import {getCookingTime} from "../utils/cookingTime.js"
@@ -176,7 +177,7 @@ export const createOrder = async (req, res, next) => {
     //    const distanceInKm = parseFloat(distanceInfo.distance.replace(' km', ''));
 
     // VIPs get extended delivery radius
-    const maxDistance = user.isVIP ? 15 : 10;
+    // const maxDistance = user.isVIP ? 15 : 10;
  
     //    //  Reject if distance is too far (e.g., over 10 km)
     //    if (distanceInKm > maxDistance) {
@@ -202,6 +203,35 @@ export const createOrder = async (req, res, next) => {
       // // Priority orders for VIPs
       // const isPriority = user.isVIP;
  
+
+      // Handle table reservation for dine-in orders
+// if (deliveryType === 'dine-in') {
+//   try {
+//     const tableOptions = {
+//       capacity: items.length + 1, // Estimate capacity needed
+//       location: req.body.preferredLocation || 'indoor'
+//     };
+    
+//     // VIPs get special table types
+//     if (user.isVIP) {
+//       tableOptions.tableType = user.vipLevel === 'platinum' ? 'premium_window_seat' : 'vip_section';
+//     }
+    
+//     const reservation = await reserveTable(req.auth.id, tableOptions, order._id);
+    
+//     // Add reservation info to order
+//     order.tableReservation = {
+//       tableId: reservation.tableId,
+//       tableNumber: reservation.tableNumber,
+//       tableType: reservation.tableType,
+//       time: reservation.time
+//     };
+//     await order.save();
+//   } catch (error) {
+//     console.error('Failed to reserve table:', error);
+//     // Don't fail the order if table reservation fails
+//   }
+// }
 
     // validate order details
     const { error, value } = orderValidator.validate({
@@ -300,7 +330,7 @@ export const createOrder = async (req, res, next) => {
     // VIPs get instant cooking, no matter the distance!
     // if (user.isVIP) {
     //   // VIP-specific enhancements
-    logger.info(`Processing VIP order preparation for user ${user.id}`);
+    // logger.info(`Processing VIP order preparation for user ${user.id}`);
     //   // Add free appetizer for platinum VIPs
     //   if (user.vipLevel === 'platinum') {
 
