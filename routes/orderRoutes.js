@@ -6,14 +6,15 @@ import {
   getOrders,
   updateOrderStatus,
 } from "../controllers/orderCon.js";
-import { isAuthenticated, isAuthorized } from "../middleware/auth.js";
+import { isAuthenticated } from "../middlewares/auth.js";
+import { userRoleCheck } from "../middlewares/roleCheck.js";
 
 const orderRouter = Router();
 
 orderRouter.get(
   "/orders",
   isAuthenticated,
-  isAuthorized(["admin", "superadmin"]),
+  userRoleCheck(["admin"]),
   getOrders
 );
 
@@ -26,7 +27,7 @@ orderRouter.post("/orders", isAuthenticated, createOrder);
 orderRouter.put(
   "/orders/:id/status",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   updateOrderStatus
 );
 

@@ -7,14 +7,15 @@ import {
   updateReservationStatus,
   cancelReservation,
 } from "../controllers/reservationCon.js";
-import { isAuthenticated, isAuthorized } from "../middleware/auth.js";
+import { isAuthenticated } from "../middlewares/auth.js";
+import { userRoleCheck } from "../middlewares/roleCheck.js";
 
 const reservationRouter = Router();
 
 reservationRouter.get(
   "/reservations",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   getReservations
 );
 
@@ -31,13 +32,13 @@ reservationRouter.post("/reservations", isAuthenticated, createReservation);
 reservationRouter.put(
   "/reservations/:id/status",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   updateReservationStatus
 );
 
 reservationRouter.put(
   "/reservations/:id/cancel",
-  isAuthenticated,
+  isAuthenticated, userRoleCheck(['admin', 'user']),
   cancelReservation
 );
 

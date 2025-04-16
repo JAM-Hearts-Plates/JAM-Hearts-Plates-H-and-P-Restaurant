@@ -1,7 +1,7 @@
 import { ReservationModel } from "../models/reservation.js";
 import { OrderModel } from "../models/order.js";
 import { UserModel } from "../models/user.js";
-import {TableModel} from "../models/table.js"
+// import {TableModel} from "../models/table.js"
 import appError from "../utils/appError.js";
 import { sendReservationConfirmation } from "../services/notification.js";
 import { reservationValidator } from "../validators/reservationVal.js";

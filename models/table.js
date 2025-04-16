@@ -73,4 +73,5 @@
 //   );
 // };
 // tableSchema.plugin(normalize)
+
 // export const TableModel = model('Table', tableSchema);

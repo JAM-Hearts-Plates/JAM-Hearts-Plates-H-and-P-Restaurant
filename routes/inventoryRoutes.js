@@ -8,56 +8,57 @@ import {
   restockInventory,
   updateInventoryItem,
 } from "../controllers/inventoryCon.js";
-import { isAuthenticated, isAuthorized } from "../middleware/auth.js";
+import { isAuthenticated } from "../middlewares/auth.js";
+import { userRoleCheck } from "../middlewares/roleCheck.js";
 
 const inventoryRouter = Router();
 
 inventoryRouter.get(
   "/inventory",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   getInventoryItems
 );
 
 inventoryRouter.get(
   "/inventory/low",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   getLowInventoryItems
 );
 
 inventoryRouter.get(
   "/inventory/:id",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   getInventoryItem
 );
 
 inventoryRouter.post(
   "/inventory",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   createInventoryItem
 );
 
 inventoryRouter.put(
   "/inventory/:id",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   updateInventoryItem
 );
 
 inventoryRouter.delete(
   "/inventory/:id",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   deleteInventoryItem
 );
 
 inventoryRouter.put(
   "/inventory/:id/restock",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   restockInventory
 );
 

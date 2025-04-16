@@ -5,8 +5,10 @@ import {
   getMenuItem,
   getMenuItems,
   replaceMenuItem,
+  updateMenuItem,
 } from "../controllers/menuCon.js";
-import { isAuthenticated, isAuthorized } from "../middlewares/auth.js";
+import { isAuthenticated } from "../middlewares/auth.js";
+import { userRoleCheck } from "../middlewares/roleCheck.js";
 import { menuPicturesUpload } from "../middlewares/upload.js";
 
 const menuRouter = Router();
@@ -18,22 +20,23 @@ menuRouter.get("/menu/:id", getMenuItem);
 menuRouter.post(
   "/menu",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   menuPicturesUpload.array("pictures", 5),
   addMenu
 );
 
+
 menuRouter.patch(
   "/menu/:id",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   updateMenuItem
 );
 
 menuRouter.put(
   "/menu/:id",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   menuPicturesUpload.array("pictures", 5),
   replaceMenuItem
 );
@@ -41,7 +44,7 @@ menuRouter.put(
 menuRouter.delete(
   "/menu/:id",
   isAuthenticated,
-  isAuthorized(["admin"]),
+  userRoleCheck(["admin"]),
   deleteMenuItem
 );
 
