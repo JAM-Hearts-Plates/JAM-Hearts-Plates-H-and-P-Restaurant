@@ -20,6 +20,7 @@
     "express": "^5.1.0",
     "express-jwt": "^8.5.1",
     "googleapis": "^148.0.0",
+    "haversine-distance": "^1.2.3",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
