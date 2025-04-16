@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js"
+import appError from "./utils/appError.js";
+import morgan from "morgan";
 
 // importing routes
 import authRoutes from "./routes/authRoutes.js";
@@ -27,6 +29,11 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
+// Use morgan only in development
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev")); // logs method, status, and response time
+}
+
 // using routes
 app.use(authRoutes);
 app.use(userRoutes)
@@ -38,10 +45,15 @@ app.use(inventoryRoutes)
 app.use(deliveryRoutes)
 app.use(analyticsRoutes)
 
+// Handle undefined routes
+app.all("*", (req, res, next) => {
+  next(new appError(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
 app.use(errorHandler)
 
 // server listening
 const port = process.env.PORT || 4512
 app.listen(port, () => {
-  console.log(`Hearts and Plates is ready to serve on port ${ port}`);
+  console.log(`Hearts and Plates is ready to serve on port ${port}`);
 });
