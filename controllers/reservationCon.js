@@ -1,7 +1,7 @@
 import { ReservationModel } from "../models/reservation.js";
 import { OrderModel } from "../models/order.js";
 import { UserModel } from "../models/user.js";
-// import {TableModel} from "../models/table.js"
+import {TableModel} from "../models/table.js"
 import appError from "../utils/appError.js";
 import { sendReservationConfirmation } from "../services/notification.js";
 import { reservationValidator } from "../validators/reservationVal.js";
@@ -112,27 +112,27 @@ export const createReservation = async (req, res, next) => {
     }
     const reservation = await ReservationModel.create(value);
 
-// // Try to reserve a table if requested
-// if (tableType || tableLocation) {
-//   try {
-//     const tableOptions = {
-//       capacity: partySize,
-//       tableType: tableType || 'regular',
-//       location: tableLocation || 'indoor',
-//       duration: 120 // 2 hours by default
-//     };
+// Try to reserve a table if requested
+if (tableType || tableLocation) {
+  try {
+    const tableOptions = {
+      capacity: partySize,
+      tableType: tableType || 'regular',
+      location: tableLocation || 'indoor',
+      duration: 120 // 2 hours by default
+    };
     
-//     const tableReservation = await reserveTable(req.auth.id, tableOptions);
+    const tableReservation = await reserveTable(req.auth.id, tableOptions);
     
-//     // Add table info to reservation
-//     reservation.tableId = tableReservation.tableId;
-//     reservation.tableNumber = tableReservation.tableNumber;
-//     await reservation.save();
-//   } catch (tableError) {
-//     // Don't fail the reservation if table reservation fails
-//     console.error('Failed to reserve table:', tableError);
-//   }
-// }
+    // Add table info to reservation
+    reservation.tableId = tableReservation.tableId;
+    reservation.tableNumber = tableReservation.tableNumber;
+    await reservation.save();
+  } catch (tableError) {
+    // Don't fail the reservation if table reservation fails
+    console.error('Failed to reserve table:', tableError);
+  }
+}
 
     // Integrate with calendar if it's a live cooking event
     if (isLiveCooking) {
@@ -237,15 +237,15 @@ export const cancelReservation = async (req, res, next) => {
       reservation.calendarEventId = undefined; // optional: remove ID from DB
     }
 
-    // if (reservation.tableId) {
-    //   try {
-    //     await releaseTable(reservation.tableId);
-    //     reservation.tableId = undefined;
-    //     reservation.tableNumber = undefined;
-    //   } catch (tableError) {
-    //     console.error('Error releasing table:', tableError);
-    //   }
-    // }
+    if (reservation.tableId) {
+      try {
+        await releaseTable(reservation.tableId);
+        reservation.tableId = undefined;
+        reservation.tableNumber = undefined;
+      } catch (tableError) {
+        console.error('Error releasing table:', tableError);
+      }
+    }
     
     reservation.status = "cancelled";
     await reservation.save();
