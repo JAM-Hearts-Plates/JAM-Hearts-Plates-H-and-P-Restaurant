@@ -90,7 +90,7 @@ export const viewPoints = async (req, res, next) => {
         const loyalty = await LoyaltyModel.findOne({ userId })
         if (!loyalty) {
             return res.status(404).json({ error: 'Loyalty record not found' });
-        }
+        };
         res.status(200).json({ message: `Loyalty points for user ${userId} are :`, data: loyalty });
     } catch (error) {
         next(error)
