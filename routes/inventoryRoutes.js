@@ -41,7 +41,7 @@ inventoryRouter.post(
   createInventoryItem
 );
 
-inventoryRouter.put(
+inventoryRouter.patch(
   "/inventory/:id",
   isAuthenticated,
   userRoleCheck(["admin"]),
