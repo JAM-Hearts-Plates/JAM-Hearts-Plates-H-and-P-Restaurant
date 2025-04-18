@@ -8,6 +8,6 @@ loyaltyRoutes.post("/earnpoints", earnPoints)
 
 loyaltyRoutes.post("/redeempoints", redeemPoints)
 
-loyaltyRoutes.get("/viewpoints", viewPoints)
+loyaltyRoutes.get("/viewpoints/:userId", viewPoints)
 
 export default loyaltyRoutes;

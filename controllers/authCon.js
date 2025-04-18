@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { loginRiderValidator, loginUserValidator, registerRiderValidator, registerUserValidator } from "../validators/authVal.js";
 import { mailTransporter } from "../utils/mailing.js";
 import { emailMessage } from "../utils/mailing.js";
+import AccessToken from "twilio/lib/jwt/AccessToken.js";
 
 
 export const registerUser = async (req, res) => {
@@ -16,7 +17,7 @@ export const registerUser = async (req, res) => {
     // Check if user does not exist already
     const user = await UserModel.findOne({
         $or: [
-            {username: value.username},
+            {username: value.userName},
             { email: value.email }
         ]
     })
@@ -39,7 +40,10 @@ export const registerUser = async (req, res) => {
         html: emailMessage.replace("{{lastName}}", value.lastName)
     })
     // Return response
-    res.status(201).json('User registered successfully')
+    res.status(201).json({
+        message: 'User registered successfully',
+        data: newUser
+    })
 };
 
 
@@ -54,7 +58,7 @@ export const loginUser = async (req, res, next) => {
     //Find matching user record in database
     const user = await UserModel.findOne({
         $or: [
-            { username: value.username },
+            { userName: value.userName },
             { email: value.email }
         ]
     });
@@ -75,7 +79,7 @@ export const loginUser = async (req, res, next) => {
     // Return response
     res.status(200).json({
         message: 'Login successful',
-        token,
+        accessToken,
         user: {
             id: user.id,
             role: user.role
@@ -130,7 +134,7 @@ export const loginRider = async (req, res, next) => {
     //Find matching user record in database
     const user = await RiderModel.findOne({
         $or: [
-            { username: value.username },
+            { name: value.name },
             { email: value.email }
         ]
     });
@@ -182,9 +186,9 @@ export const forgotPassword = async (req, res) => {
       await user.save();
   
       // Step 4: Send the reset link via email
-      const resetLink = `${req.protocol}://${req.get('host')}/reset-password/:token/${resetToken}`;
+      const resetLink = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
       const message = `Click the link to reset your password: ${resetLink}`;
-      await mailTransporter.sendEmail({from: process.env.GMAIL_USER, to: user.email, subject: 'Password Reset Request', text: message });
+      await mailTransporter.sendMail({from: process.env.GMAIL_USER, to: user.email, subject: 'Password Reset Request', text: message });
   
       res.status(200).json({ message: 'Password reset link sent to your email' });
     } catch (error) {
@@ -199,7 +203,7 @@ export const forgotPassword = async (req, res) => {
       const { newPassword } = req.body;
   
       // Step 1: Verify the JWT token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
   
       // Step 2: Find the user based on the token's payload (userId)
       const user = await UserModel.findById(decoded.userId);
