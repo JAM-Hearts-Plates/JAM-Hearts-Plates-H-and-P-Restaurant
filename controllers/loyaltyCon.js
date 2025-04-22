@@ -15,6 +15,10 @@ export const earnPoints = async (req, res, next) => {
         if (!loyalty) {
             loyalty = await LoyaltyModel.create({ userId })
         }
+         // Ensure points are valid
+         if (points <= 0) {
+            return res.status(400).json({ error: 'Points must be greater than zero' });
+        }
 
         // Update points and transaction history
         loyalty.pointsEarned += points;

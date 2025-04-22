@@ -1,6 +1,10 @@
 import Joi from "joi";
 
 export const orderItemValidator = Joi.object({
+  menuItem: Joi.string().hex().length(24).required(),
+  quantity: Joi.number().integer().min(1).required(),
+  price: Joi.number().positive().required(),
+  specialInstructions: Joi.string().allow('').optional(),
   menuItem: Joi.string().hex().length(24).required().messages({ 
     'string.hex': 'Menu item ID must be a valid MongoDB ID',
     'any.required': 'Menu item is required'}),
