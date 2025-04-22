@@ -4,7 +4,7 @@ export const orderItemValidator = Joi.object({
   menuItem: Joi.string().hex().length(24).required(),
   quantity: Joi.number().integer().min(1).required(),
   price: Joi.number().positive().required(),
-  specialInstructions: Joi.string().optional(),
+  specialInstructions: Joi.string().allow('').optional(),
 });
 
 export const orderValidator = Joi.object({

@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler.js"
 import appError from "./utils/appError.js";
 import morgan from "morgan";
+import passport from "passport";
 
 // importing routes
 import authRoutes from "./routes/authRoutes.js";
@@ -18,6 +19,7 @@ import deliveryRoutes from "./routes/deliveryRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 // import tableRoutes from "./routes/tableRoutes.js"
 import riderRoutes from "./routes/rider.js";
+import "./middlewares/auth.js"
 
 
 // making a database connection
@@ -35,6 +37,9 @@ app.use(cookieParser());
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev")); // logs method, status, and response time
 }
+
+// initialize passport middleware**
+app.use(passport.initialize()); // Required for Google OAuth authentication
 
 // using routes
 app.use(authRoutes);

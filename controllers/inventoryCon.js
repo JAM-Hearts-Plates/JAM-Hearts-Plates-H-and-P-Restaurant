@@ -54,14 +54,14 @@ export const getInventoryItem = async (req, res, next) => {
 export const createInventoryItem = async (req, res, next) => {
   try {
     // Admin only
-    if (req.auth.role !== "admin") {
-      return next(new appError("Only admins can create inventory items", 403));
-    }
+    // if (req.auth.role !== "admin") {
+    //   return next(new appError("Only admins can create inventory items", 403));
+    // }
 
     const { error, value } = inventoryValidator.validate(req.body);
 
     if (error) {
-      returnnext(
+      return next(
         new appError(error.details.map((d) => d.message).join(", "), 422)
       );
     }

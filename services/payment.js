@@ -18,10 +18,11 @@ export const processPayment = async (amount, paymentDetails) => {
     const paymentIntent = await stripeClient.paymentIntents.create({
       amount: amountInCents,
       currency: "usd",
+      payment_method_types: ["card"],
       payment_method: paymentDetails.paymentMethodId,
       confirm: true,
       description: "Restaurant order payment",
-      return_url: process.env.PAYMENT_RETURN_URL,
+      // return_url: process.env.PAYMENT_RETURN_URL,
     });
 
     return {

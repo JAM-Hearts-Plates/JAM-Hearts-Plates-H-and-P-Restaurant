@@ -17,7 +17,7 @@ export const registerUser = async (req, res) => {
     // Check if user does not exist already
     const user = await UserModel.findOne({
         $or: [
-            {username: value.userName},
+            {userName: value.userName},
             { email: value.email }
         ]
     })
