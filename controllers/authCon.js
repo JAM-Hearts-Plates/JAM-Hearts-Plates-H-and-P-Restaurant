@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { loginRiderValidator, loginUserValidator, registerRiderValidator, registerUserValidator } from "../validators/authVal.js";
 import { mailTransporter } from "../utils/mailing.js";
 import { emailMessage } from "../utils/mailing.js";
-import AccessToken from "twilio/lib/jwt/AccessToken.js";
+
 
 
 export const registerUser = async (req, res) => {
@@ -29,9 +29,17 @@ export const registerUser = async (req, res) => {
 
     // Create user record in database
     const newUser = await UserModel.create({
-        ...value,
-        password: hashedPassword
+        firstName: value.firstName,
+        lastName: value.lastName,
+        userName: value.userName,
+        email: value.email,
+        password: hashedPassword,
+        phone: value.phone,
+        role: value.role || 'user'
     });
+
+    await newUser.save()
+
     // Send registration email to user
     await mailTransporter.sendMail({
         from: process.env.GMAIL_USER,
@@ -40,9 +48,10 @@ export const registerUser = async (req, res) => {
         html: emailMessage.replace("{{lastName}}", value.lastName)
     })
     // Return response
+    const { password, confirmPassword, ...userWithoutSensitiveData } = newUser.toObject();
     res.status(201).json({
         message: 'User registered successfully',
-        data: newUser
+        data: userWithoutSensitiveData 
     })
 };
 
@@ -63,7 +72,7 @@ export const loginUser = async (req, res, next) => {
         ]
     });
     if (!user) {
-        return res.status(409).json("User does not exists");
+        return res.status(404).json("User does not exists");
     }
     //Compare incoming password with saved password
     const correctPassword = bcrypt.compareSync(value.password, user.password);
@@ -139,7 +148,7 @@ export const loginRider = async (req, res, next) => {
         ]
     });
     if (!user) {
-        return res.status(409).json("Rider does not exists");
+        return res.status(404).json("Rider does not exists");
     }
     //Compare incoming password with saved password
     const correctPassword = bcrypt.compareSync(value.password, user.password);
@@ -155,7 +164,7 @@ export const loginRider = async (req, res, next) => {
     // Return response
     res.status(200).json({
         message: 'Login successful',
-        token,
+        accessToken,
         user: {
             id: user.id,
             role: user.role

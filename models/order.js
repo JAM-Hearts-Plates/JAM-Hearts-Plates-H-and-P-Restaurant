@@ -39,13 +39,13 @@ const orderSchema = new Schema(
       enum: ["pickup", "delivery"],
       required: true,
     },
-    // estimatedCookingTime: { type: Number },
-    // cookingBreakdown: [
-    //   {
-    //     name: String,
-    //     prepTime: Number,
-    //   },
-    // ],
+    estimatedCookingTime: { type: Number },
+    cookingBreakdown: [
+      {
+        name: String,
+        prepTime: Number,
+      },
+    ],
   
     estimatedDeliveryTime: Date,
     transactionId: String,

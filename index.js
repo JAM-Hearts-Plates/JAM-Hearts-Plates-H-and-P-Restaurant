@@ -18,6 +18,7 @@ import deliveryRoutes from "./routes/deliveryRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 // import tableRoutes from "./routes/tableRoutes.js"
 import riderRoutes from "./routes/rider.js";
+import stripeRouter from "./routes/stripeWebhooks.js";
 
 
 // making a database connection
@@ -25,6 +26,7 @@ await mongoose.connect(process.env.MONGO_URI);
 
 // create an express app
 const app = express();
+app.use('/webhooks', stripeRouter)
 
 // middlewares
 app.use(cors());
@@ -48,6 +50,7 @@ app.use(deliveryRoutes)
 app.use(analyticsRoutes)
 // app.use(tableRoutes)
 app.use(riderRoutes)
+
 
 // Handle undefined routes
 // app.all("*", (req, res, next) => {
