@@ -46,13 +46,27 @@ const orderSchema = new Schema(
         prepTime: Number,
       },
     ],
-  
+
+
     estimatedDeliveryTime: Date,
     transactionId: String,
     notes: String,
+
+    cancelledAt: { type: Date },
+    cancelledBy: { type: Types.ObjectId, ref: "User" },
   },
+
   { timestamps: true }
 );
+
+orderSchema.pre('save', async function(next) {
+  try {
+    await orderValidator.validateAsync(this.toObject());
+    next();
+  } catch (err) {
+    next(new Error(`Validation failed: ${err.details[0].message}`));
+  }
+});
 
 orderSchema.plugin(normalize);
 export const OrderModel = model("Order", orderSchema);

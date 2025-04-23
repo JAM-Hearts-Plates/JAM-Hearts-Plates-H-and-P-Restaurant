@@ -1,8 +1,10 @@
 import Joi from "joi";
+import { join } from "path";
 
 export const addMenuValidator = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().required(),
+  category: Joi.string(),
   price: Joi.number().required(),
   category: Joi.string().required(),
   pictures: Joi.array().items(Joi.string()).required(),

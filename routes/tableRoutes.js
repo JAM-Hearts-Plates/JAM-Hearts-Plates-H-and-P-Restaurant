@@ -1,20 +1,21 @@
-// import { Router } from "express";
-// import { getAllTables, getAvailableTables, releaseExpiredTables, releaseTable, reserveTable } from "../controllers/tableCon.js";
-// import { isAuthenticated, isAuthorized } from "../middleware/auth.js";
+import { Router } from "express";
+import { getAllTables, getAvailableTables, releaseExpiredTables, releaseTable, reserveTable } from "../controllers/tableCon.js";
+import { isAuthenticated } from "../middlewares/auth.js";
+import { userRoleCheck } from "../middlewares/roleCheck.js";
 
-// const tableRouter = Router();
-
-
-
-// tableRouter.get('/tables/available',isAuthenticated, isAuthorized, getAvailableTables);
+const tableRouter = Router();
 
 
-// tableRouter.get('/tables', isAuthenticated,isAuthorized, getAllTables);
 
-// tableRouter.post('/tables/reserve', isAuthenticated, isAuthorized, reserveTable);
+tableRouter.get('/tables/available',isAuthenticated, userRoleCheck, getAvailableTables);
 
-// tableRouter.put('/tables/:id/release', isAuthenticated, isAuthorized, releaseTable);
 
-// tableRouter.post('/tables/release-expired', isAuthenticated,isAuthorized, releaseExpiredTables);
+tableRouter.get('/tables', isAuthenticated,userRoleCheck, getAllTables);
 
-// export default tableRouter;
+tableRouter.post('/tables/reserve', isAuthenticated, userRoleCheck, reserveTable);
+
+tableRouter.put('/tables/:id/release', isAuthenticated, userRoleCheck, releaseTable);
+
+tableRouter.post('/tables/release-expired', isAuthenticated,userRoleCheck, releaseExpiredTables);
+
+export default tableRouter;

@@ -26,6 +26,7 @@ export const processPayment = async (amount, paymentDetails) => {
     const paymentOptions = {
       amount: amountInCents,
       currency: "usd",
+
       description: "Restaurant order payment",
       metadata: paymentDetails.metadata || {},
     };
@@ -115,6 +116,13 @@ export const createCustomer = async (customerData) => {
       metadata: {
         userId: customerData.userId,
       },
+
+      payment_method_types: ["card"],
+      payment_method: paymentDetails.paymentMethodId,
+      confirm: true,
+      description: "Restaurant order payment",
+      // return_url: process.env.PAYMENT_RETURN_URL,
+
     });
 
     return {

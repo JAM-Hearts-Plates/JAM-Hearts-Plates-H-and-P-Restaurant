@@ -3,7 +3,7 @@ import { updateRiderValidator } from "../validators/authVal.js";
 
 
 
-export const updateDriverAvailability = async (req, res) => {
+export const updateRiderAvailability = async (req, res) => {
     try {
       const { userId } = req.params; // Driver ID from request params
       const { availability } = req.body; // New availability status from frontend
@@ -32,7 +32,7 @@ export const getAvailableRiders = async (req, res) => {
   
   
 
-  export const getDriverDeliveries = async (req, res) => {
+  export const getRiderDeliveries = async (req, res) => {
     try {
       const { riderId } = req.params; // Get the rider ID 
   
