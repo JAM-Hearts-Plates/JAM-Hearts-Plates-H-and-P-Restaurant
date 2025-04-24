@@ -33,11 +33,14 @@ await mongoose.connect(process.env.MONGO_URI);
 // create an express app
 const app = express();
 
+const allowedOrigin = ["http://localhost:5173"]
+
+
 const corsOptions = {
-  origin: "http://localhost:5173", // Your Vite frontend URL
-  credentials: true,
+  origin: allowedOrigin,
+  // credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
+  //allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 };
 app.use(cors());
 
@@ -48,12 +51,13 @@ app.use(express.json());
 
 
 
+
 // Set up Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: allowedOrigin,
     methods: ["GET", "POST","PUT", "DELETE"],
-    credentials: true
+    // credentials: true
   },
   connectionStateRecovery: {
     maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
