@@ -3,12 +3,12 @@ import { vipValidator } from "../validators/vipVal.js";
 
 export const registerUserValidator = Joi.object({
 
-  firstName: Joi.string()
+  fullName: Joi.string()
     .regex(/^[A-Za-z]+$/)
     .required(),
-  lastName: Joi.string()
-    .regex(/^[A-Za-z]+$/)
-    .required(),
+  // lastName: Joi.string()
+  //   .regex(/^[A-Za-z]+$/)
+  //   .required(),
   userName: Joi.string().required(),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })

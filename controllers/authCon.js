@@ -45,7 +45,7 @@ export const registerUser = async (req, res) => {
         from: process.env.GMAIL_USER,
         to: value.email,
         subject: "Welcome to Hearts and PLates",
-        html: emailMessage.replace("{{lastName}}", value.lastName)
+        html: emailMessage.replace("{{userName}}", value.lastName)
     })
     // Return response
     const { password, confirmPassword, ...userWithoutSensitiveData } = newUser.toObject();

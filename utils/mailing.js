@@ -13,7 +13,7 @@ export const mailTransporter = createTransport({
   
   export const emailMessage = `
   <div>
-  <h1>Dear {{lastName}}</h1>
+  <h1>Dear {{userName}}</h1>
   <p>A new account has been created for you at Hearts and Plates</p>
   <h2>Thank you</h2>
   </div>

@@ -118,7 +118,7 @@ app.use(passport.initialize()); // Required for Google OAuth authentication
 
 // using routes
 app.use(authRoutes);
-app.use( userRoutes)
+app.use(userRoutes)
 app.use(menuRouter)
 app.use(orderRouter)
 app.use(reservationRouter)
