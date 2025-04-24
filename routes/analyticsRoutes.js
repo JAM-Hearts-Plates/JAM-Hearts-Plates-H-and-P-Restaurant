@@ -7,7 +7,9 @@ analyticsRoutes.post("/analytics", logEvent)
 
 analyticsRoutes.get("/analytics", getEvents)
 
-analyticsRoutes.delete("/delete/:id", deleteEvent)
+analyticsRoutes.get("/analytics/:id", getEvents)
+
+analyticsRoutes.delete("/analytics/:id", deleteEvent)
 
 
 export default analyticsRoutes;

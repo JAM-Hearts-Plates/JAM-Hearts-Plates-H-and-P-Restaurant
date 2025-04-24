@@ -12,6 +12,7 @@ const getEventTimes = (reservation) => {
   return { start, end };
 };
 
+
 // Add reservation to Google Calendar
 export const addReservationToCalendar = async (reservation) => {
   try {
@@ -35,6 +36,7 @@ export const addReservationToCalendar = async (reservation) => {
     throw new appError('Failed to add reservation to calendar', 500);
   }
 };
+
 
 // Update reservation in Google Calendar
 export const updateReservationInCalendar = async (eventId, reservation) => {

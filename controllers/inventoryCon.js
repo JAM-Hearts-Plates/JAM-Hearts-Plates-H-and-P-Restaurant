@@ -7,9 +7,9 @@ import { inventoryValidator } from "../validators/inventoryVal.js";
 export const getInventoryItems = async (req, res, next) => {
   try {
     // Admin only
-    if (req.auth.role !== "admin") {
-      return next(new appError("Only admins can view inventory", 403));
-    }
+    // if (req.auth.role !== "admin") {
+    //   return next(new appError("Only admins can view inventory", 403));
+    // }
     const { filter = "{}", sort = "{}" } = req.query;
     const inventoryItems = await InventoryModel.find(JSON.parse(filter)).sort(
       JSON.parse(sort)
@@ -86,9 +86,9 @@ export const createInventoryItem = async (req, res, next) => {
 export const updateInventoryItem = async (req, res, next) => {
   try {
     // Admin only
-    if (req.auth.role !== "admin") {
-      return next(new appError("Only admins can update inventory", 403));
-    }
+    // if (req.auth.role !== "admin") {
+    //   return next(new appError("Only admins can update inventory", 403));
+    // }
 
     const inventoryItem = await InventoryModel.findByIdAndUpdate(
       req.params.id,
@@ -118,9 +118,9 @@ export const updateInventoryItem = async (req, res, next) => {
 export const deleteInventoryItem = async (req, res, next) => {
   try {
     // Admin only
-    if (req.auth.role !== "admin") {
-      return next(new appError("Only admins can delete inventory items", 403));
-    }
+    // if (req.auth.role !== "admin") {
+    //   return next(new appError("Only admins can delete inventory items", 403));
+    // }
 
     // Check if any menu items use this inventory
     const menuItemsUsingInventory = await MenuModel.find({
@@ -154,9 +154,9 @@ export const deleteInventoryItem = async (req, res, next) => {
 export const getLowInventoryItems = async (req, res, next) => {
   try {
     // Admin only
-    if (req.auth.role !== "admin") {
-      return next(new appError("Only admins can view inventory", 403));
-    }
+    // if (req.auth.role !== "admin") {
+    //   return next(new appError("Only admins can view inventory", 403));
+    // }
 
     const lowInventoryItems = await InventoryModel.find({
       $expr: { $lte: ["$quantity", "$threshold"] },
@@ -175,9 +175,9 @@ export const getLowInventoryItems = async (req, res, next) => {
 export const restockInventory = async (req, res, next) => {
   try {
     // Admin only
-    if (req.auth.role !== "admin") {
-      return next(new appError("Only admins can restock inventory", 403));
-    }
+    // if (req.auth.role !== "admin") {
+    //   return next(new appError("Only admins can restock inventory", 403));
+    // }
 
     const { quantity } = req.body;
 
