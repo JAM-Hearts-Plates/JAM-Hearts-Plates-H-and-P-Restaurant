@@ -39,26 +39,50 @@ app.use('/webhooks', stripeRouter)
 // Set up Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    methods: ["GET", "POST"]
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    methods: ["GET", "POST","PUT", "DELETE"],
+    credentials: true
+  },
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
+    skipMiddlewares: true
   }
+});
+
+
+
+// Socket.IO connection handler
+const configureSocketIO = () => {
+io.on('connection', (socket) => {
+  console.log(`New client connected:, ${socket.id}`);
+  
+   // Join room for order updates
+   socket.on('joinOrderRoom', (orderId) => {
+    socket.join(`order_${orderId}`);
+    console.log(`Socket ${socket.id} joined order_${orderId}`);
+  });
+
+  // Handle real-time order updates
+  socket.on('orderUpdate', (data) => {
+    io.to(`order_${data.orderId}`).emit('orderStatusChanged', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`Client disconnected:, ${socket.id}`);
+  });
 });
 
 // Make io accessible to other modules
 app.set('io', io);
+}
 
-// Socket.IO connection handler
-io.on('connection', (socket) => {
-  console.log('New client connected:', socket.id);
-  
-  socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id);
-  });
-});
-
+configureSocketIO();
 
 // middlewares
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -67,10 +91,12 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev")); // logs method, status, and response time
 }
 
-// Root route
-app.get("/", (req, res) => {
-  res.send("API is running");
-});
+// Health Check
+app.get('/', (req, res) => res.status(200).json({
+  status: 'running',
+  timestamp: new Date().toISOString(),
+  websockets: io.engine.clientsCount
+}));
 
 // initialize passport middleware**
 app.use(passport.initialize()); // Required for Google OAuth authentication
@@ -95,13 +121,13 @@ app.use(vipRouter)
 //   next(new appError(`Can't find ${req.originalUrl} on this server`, 404));
 // });
 
-
+app.use(errorHandler)
 
 
 // server listening
 const port = process.env.PORT || 4512
 httpServer.listen(port, () => {
-  console.log(`Hearts and Plates is ready to serve on port ${port}`);
+  console.log(`Hearts and Plates is ready to serve on port ${port}  WebSockets active on: ws://localhost:${port}`);
 });
 
 // Export getIO function
