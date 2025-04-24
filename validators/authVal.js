@@ -50,7 +50,7 @@ export const updateUserValidator = Joi.object({
   // lastName: Joi.string()
   //   .regex(/^[A-Za-z]+$/)
   //   .optional(),
-  userName: Joi.string().required(),
+  userName: Joi.string().optional(),
   email: Joi.string().optional(),
   password: Joi.string().optional(),
   phone: Joi.string().optional(),
