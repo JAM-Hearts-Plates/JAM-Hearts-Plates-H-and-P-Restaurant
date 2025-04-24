@@ -21,6 +21,7 @@ import deliveryRoutes from "./routes/deliveryRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import tableRouter from "./routes/tableRoutes.js"
 import riderRoutes from "./routes/rider.js";
+import stripeRouter from "./routes/stripeWebhooks.js";
 import "./middlewares/auth.js"
 import vipRouter from "./routes/vipRoutes.js";
 
