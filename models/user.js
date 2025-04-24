@@ -9,10 +9,6 @@ const userSchema = new Schema(
 
     password: { type: String, required: true },
     phone: { type: String, required: true },
-
-    password: { type: String, requires: true },
-    phone: { type: String},
-
     role: {
       type: String,
       enum: ["user", "manager", "ceo", "chef", "waitstaff", "finance", "admin"],
@@ -37,10 +33,10 @@ const userSchema = new Schema(
 );
 
 userSchema.set("toJSON", {
-  transform: (document, returned0bject) => {
-    returned0bject.id = returned0bject._id.toString();
-    delete returned0bject._id;
-    delete returned0bject.__v;
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
     delete returnedObject.password;
   },
 });
