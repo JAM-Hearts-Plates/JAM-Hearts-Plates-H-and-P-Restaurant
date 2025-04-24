@@ -79,14 +79,18 @@ app.set('io', io);
 configureSocketIO();
 
 // middlewares
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+// / Configure CORS middleware
+const corsOptions = {
+  origin: "http://localhost:5173", // Your Vite frontend URL
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
-app.use(express.json());
-app.use(cookieParser());
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options("", cors(corsOptions))
 
 // Use morgan only in development
 if (process.env.NODE_ENV === "development") {
@@ -119,9 +123,9 @@ app.use(vipRouter)
 
 
 // Handle undefined routes
-// app.all("*", (req, res, next) => {
-//   next(new appError(`Can't find ${req.originalUrl} on this server`, 404));
-// });
+app.all("", (req, res, next) => {
+  next(new appError(`Can't find ${req.originalUrl} on this server`, 404));
+});
 
 app.use(errorHandler)
 
