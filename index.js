@@ -21,7 +21,9 @@ import deliveryRoutes from "./routes/deliveryRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import tableRouter from "./routes/tableRoutes.js"
 import riderRoutes from "./routes/rider.js";
-import "./middlewares/auth.js"
+import stripeRouter from "./routes/stripeWebhooks.js";
+import vipRouter from "./routes/vipRoutes.js";
+
 
 
 // making a database connection
@@ -30,6 +32,9 @@ await mongoose.connect(process.env.MONGO_URI);
 // create an express app
 const app = express();
 const httpServer = createServer(app);
+app.use('/webhooks', stripeRouter)
+
+
 
 // Set up Socket.IO
 const io = new Server(httpServer, {
@@ -51,6 +56,7 @@ io.on('connection', (socket) => {
   });
 });
 
+
 // middlewares
 app.use(cors());
 app.use(express.json());
@@ -60,6 +66,11 @@ app.use(cookieParser());
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev")); // logs method, status, and response time
 }
+
+// Root route
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
 
 // initialize passport middleware**
 app.use(passport.initialize()); // Required for Google OAuth authentication
@@ -76,6 +87,8 @@ app.use(deliveryRoutes)
 app.use(analyticsRoutes)
 app.use(tableRouter)
 app.use(riderRoutes)
+app.use(vipRouter)
+
 
 // Handle undefined routes
 // app.all("*", (req, res, next) => {
@@ -87,7 +100,7 @@ app.use(riderRoutes)
 
 // server listening
 const port = process.env.PORT || 4512
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`Hearts and Plates is ready to serve on port ${port}`);
 });
 

@@ -1,23 +1,29 @@
 import { Router } from "express";
 import { forgotPassword, loginRider, loginUser, registerRider, registerUser, resetPassword } from "../controllers/authCon.js";
+import {
+  forgotPassword,
+  loginUser,
+  registerUser,
+  resetPassword,
+} from "../controllers/authCon.js";
 import { authenticateGoogle, googleCallback } from "../middlewares/auth.js";
+
 
 
 
 const authRoutes = Router();
 
-authRoutes.post("/users/signup", registerUser)
+authRoutes.post("/users/signup", registerUser);
 
 authRoutes.post("/users/login", loginUser);
 
-authRoutes.post('/forgot-password', forgotPassword);
-
-authRoutes.post('/reset-password/:token', resetPassword);
+authRoutes.post("/users/forgot-password", forgotPassword);
 
 authRoutes.post("/riders/signup", registerRider);
 
 authRoutes.post("/riders/login", loginRider)
 
+authRoutes.post("/users/reset-password/:token", resetPassword);
 
 //google OAuth routes
 authRoutes.get("/auth/google", authenticateGoogle);
@@ -26,5 +32,6 @@ authRoutes.get("/auth/google/callback", googleCallback);
 authRoutes.get("/dashboard", (req, res) => {
     res.json({ message: "Welcome to your dashboard!" });
 });
+
 
 export default authRoutes;

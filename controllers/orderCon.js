@@ -12,7 +12,12 @@ import {
   sendOrderConfirmation,
   sendOrderCompletionNotification,
 } from "../services/notification.js";
-import { cancelOrderValidator, orderItemValidator, orderValidator } from "../validators/orderVal.js";
+import {
+  cancelOrderValidator,
+  orderItemValidator,
+  orderValidator,
+} from "../validators/orderVal.js";
+import { evaluateVIPStatus } from "../services/vipServices.js";
 
 // Helper: Calculate order total and validate items
 const validateAndCalculateOrder = async (items) => {
@@ -159,10 +164,10 @@ export const validateOrderItems = async (req, res, next) => {
   try {
     const { error } = orderItemValidator.validate(req.body.items);
     if (error) throw new appError(error.details[0].message, 422);
-    
+
     res.status(200).json({
       success: true,
-      message: "Items are valid"
+      message: "Items are valid",
     });
   } catch (error) {
     next(error);
@@ -249,6 +254,20 @@ export const createOrder = async (req, res, next) => {
       order.paymentStatus = "paid";
       order.transactionId = paymentResult.transactionId;
       await order.save();
+    }
+
+    // VIP upgrade
+    if (order.paymentStatus === "paid") {
+      // Update loyalty points
+      const pointsEarned = Math.floor(order.totalPrice / 10);
+      user.loyaltyPoints += pointsEarned;
+      await user.save();
+
+      // Check VIP qualification
+      const result = await evaluateVIPStatus(userId);
+      if (result.success) {
+        console.log(`New VIP: ${result.newStatus.level}`);
+      }
     }
 
     // 9. Update loyalty points
@@ -488,7 +507,7 @@ export const cancelOrder = async (req, res, next) => {
     order.status = "cancelled";
     order.cancelledAt = new Date();
     order.cancelledBy = userId;
-    
+
     // Handle refund if applicable
     if (refundRequested && order.paymentStatus === "paid") {
       await processRefund(order.transactionId); // Your refund service
@@ -496,10 +515,10 @@ export const cancelOrder = async (req, res, next) => {
     }
 
     await order.save();
-    
+
     res.status(200).json({
       success: true,
-      data: order
+      data: order,
     });
   } catch (error) {
     next(error);
