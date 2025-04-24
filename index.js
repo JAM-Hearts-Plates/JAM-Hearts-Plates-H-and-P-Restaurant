@@ -22,7 +22,6 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 import tableRouter from "./routes/tableRoutes.js"
 import riderRoutes from "./routes/rider.js";
 import stripeRouter from "./routes/stripeWebhooks.js";
-import "./middlewares/auth.js"
 import vipRouter from "./routes/vipRoutes.js";
 
 
@@ -32,9 +31,10 @@ await mongoose.connect(process.env.MONGO_URI);
 
 // create an express app
 const app = express();
+const httpServer = createServer(app);
 app.use('/webhooks', stripeRouter)
 
-const httpServer = createServer(app);
+
 
 // Set up Socket.IO
 const io = new Server(httpServer, {
@@ -67,6 +67,11 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev")); // logs method, status, and response time
 }
 
+// Root route
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
+
 // initialize passport middleware**
 app.use(passport.initialize()); // Required for Google OAuth authentication
 
@@ -95,7 +100,7 @@ app.use(vipRouter)
 
 // server listening
 const port = process.env.PORT || 4512
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`Hearts and Plates is ready to serve on port ${port}`);
 });
 
