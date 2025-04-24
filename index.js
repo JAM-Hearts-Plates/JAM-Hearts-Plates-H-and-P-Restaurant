@@ -39,7 +39,7 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 };
-app.use(cors(corsOptions));
+app.use(cors());
 
 const httpServer = createServer(app);
 app.use('/webhooks', stripeRouter)
