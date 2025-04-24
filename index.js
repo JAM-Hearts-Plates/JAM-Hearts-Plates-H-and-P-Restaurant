@@ -22,6 +22,7 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 import tableRouter from "./routes/tableRoutes.js"
 import riderRoutes from "./routes/rider.js";
 import "./middlewares/auth.js"
+import vipRouter from "./routes/vipRoutes.js";
 
 
 // making a database connection
@@ -76,6 +77,7 @@ app.use(deliveryRoutes)
 app.use(analyticsRoutes)
 app.use(tableRouter)
 app.use(riderRoutes)
+app.use(vipRouter)
 
 // Handle undefined routes
 // app.all("*", (req, res, next) => {
