@@ -29,10 +29,22 @@ import vipRouter from "./routes/vipRoutes.js";
 // making a database connection
 await mongoose.connect(process.env.MONGO_URI);
 
+
 // create an express app
 const app = express();
+
+const corsOptions = {
+  origin: "http://localhost:5173", // Your Vite frontend URL
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
+};
+app.use(cors(corsOptions));
+
 const httpServer = createServer(app);
 app.use('/webhooks', stripeRouter)
+
+app.use(express.json());
 
 
 
@@ -80,14 +92,9 @@ configureSocketIO();
 
 // middlewares
 // / Configure CORS middleware
-const corsOptions = {
-  origin: "http://localhost:5173", // Your Vite frontend URL
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
-};
 
-app.use(cors(corsOptions));
+
+
 
 // Handle preflight requests
 app.options("", cors(corsOptions))
