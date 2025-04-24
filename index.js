@@ -24,6 +24,7 @@ import riderRoutes from "./routes/rider.js";
 import stripeRouter from "./routes/stripeWebhooks.js";
 =======
 import "./middlewares/auth.js"
+import vipRouter from "./routes/vipRoutes.js";
 
 
 
@@ -82,6 +83,7 @@ app.use(deliveryRoutes)
 app.use(analyticsRoutes)
 app.use(tableRouter)
 app.use(riderRoutes)
+app.use(vipRouter)
 
 
 // Handle undefined routes

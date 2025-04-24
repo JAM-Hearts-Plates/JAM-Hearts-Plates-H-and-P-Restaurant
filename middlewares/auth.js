@@ -10,7 +10,24 @@ export const isAuthenticated = expressjwt({
     algorithms: ["HS256"]
 });
 
-
+export const authorizeAdmin = (req, res, next) => {
+    try {
+        if (!req.user) throw new Error('Authentication required');
+        
+        const adminRoles = ['admin', 'manager', 'ceo']; // Adjust as needed
+        if (!adminRoles.includes(req.user.role)) {
+            throw new Error('Admin privileges required');
+        }
+        
+        next();
+    } catch (error) {
+        res.status(403).json({ 
+            success: false, 
+            error: 'Admin access denied',
+            requiredRoles: ['admin', 'manager', 'ceo']
+        });
+    }
+};
 
 //google Oauth
 passport.use(
