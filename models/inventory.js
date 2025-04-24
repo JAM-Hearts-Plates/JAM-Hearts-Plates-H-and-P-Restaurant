@@ -5,7 +5,7 @@ const inventorySchema = new Schema(
   {
     name: { type: String, required: [true, "Please add a name"], unique: true },
     category: { type: String, required: [true, "Please add category"] },
-    quantity: { type: Number, required: [true, "Please add qauntity"], min: 0 },
+    quantity: { type: Number, required: [true, "Please add quantity"], min: 0 },
     unit: { type: String, required: [true, "Please add unit"] },
     threshold: {
       type: Number,

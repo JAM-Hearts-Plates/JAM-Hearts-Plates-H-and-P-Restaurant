@@ -2,6 +2,7 @@ import Joi from "joi";
 import { vipValidator } from "../validators/vipVal.js";
 
 export const registerUserValidator = Joi.object({
+
   firstName: Joi.string()
     .regex(/^[A-Za-z]+$/)
     .required(),
@@ -20,6 +21,20 @@ export const registerUserValidator = Joi.object({
     .optional(), //Role is optional, default to 'user' if not set/chosen/selected
  ...vipValidator.userFields 
 //  includes vip fields from vipVal
+
+    firstName: Joi.string().regex(/^[A-Za-z]+$/).required(),
+    lastName: Joi.string().regex(/^[A-Za-z]+$/).required(),
+    userName: Joi.string().required(),
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+    password: Joi.string().required(),
+    confirmPassword: Joi.string().valid(Joi.ref('password')),
+    phone: Joi.string(),
+
+    role: Joi.string().valid('user', 'manager', 'ceo', 'chef', 'waitstaff', 'finance', "admin").optional() //Role is optional, default to 'user' if not set/chosen/selected
+
+    role: Joi.string().valid('user', 'manager', 'ceo', 'chef', 'waitstaff', 'finance', 'admin').optional() //Role is optional, default to 'user' if not set/chosen/selected
+
+
 }).with("password", "confirmPassword");
 
 export const loginUserValidator = Joi.object({
