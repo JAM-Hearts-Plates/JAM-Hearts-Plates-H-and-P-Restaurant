@@ -1,5 +1,5 @@
 import { Router } from "express";
-
+import { forgotPassword, loginRider, loginUser, registerRider, registerUser, resetPassword } from "../controllers/authCon.js";
 import {
   forgotPassword,
   loginUser,
@@ -18,6 +18,10 @@ authRoutes.post("/users/signup", registerUser);
 authRoutes.post("/users/login", loginUser);
 
 authRoutes.post("/users/forgot-password", forgotPassword);
+
+authRoutes.post("/riders/signup", registerRider);
+
+authRoutes.post("/riders/login", loginRider)
 
 authRoutes.post("/users/reset-password/:token", resetPassword);
 

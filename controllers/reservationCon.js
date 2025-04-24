@@ -5,7 +5,7 @@ import {TableModel} from "../models/table.js"
 import appError from "../utils/appError.js";
 import { sendReservationConfirmation } from "../services/notification.js";
 import { reservationValidator } from "../validators/reservationVal.js";
-import { updateReservationInCalendar, deleteReservationFromCalendar} from "../services/calendar.js";
+import { updateReservationInCalendar, deleteReservationFromCalendar, addReservationToCalendar} from "../services/calendar.js";
 
 // get all reservations (only admins)
 export const getReservations = async (req, res, next) => {
@@ -83,7 +83,6 @@ export const getMyReservations = async (req, res, next) => {
 };
 
 // create new reservation
-
 export const createReservation = async (req, res, next) => {
   try {
     const { date, time, partySize, specialRequests, isLiveCooking,
@@ -156,14 +155,16 @@ if (tableType || tableLocation) {
   }
 };
 
+
+
 // updating reservation status
 export const updateReservationStatus = async (req, res, next) => {
   try {
-    if (req.auth.role !== "admin") {
-      return next(
-        new appError("Only admins can update reservation status", 403)
-      );
-    }
+    // if (req.auth.role !== "admin") {
+    //   return next(
+    //     new appError("Only admins can update reservation status", 403)
+    //   );
+    // }
 
     const reservation = await ReservationModel.findByIdAndUpdate(
       req.params.id,
@@ -177,14 +178,14 @@ export const updateReservationStatus = async (req, res, next) => {
     }
 
     // Send notification if status changed
-    if (req.body.status === "confirmed" || req.body.status === "cancelled") {
-      await sendReservationUpdateNotification(reservation);
+    // if (req.body.status === "confirmed" || req.body.status === "cancelled") {
+    //   await sendReservationUpdateNotification(reservation);
 
-      if (reservation.calendarEventId) {
-        await updateReservationInCalendar(reservation.calendarEventId, reservation);
-      }
+    //   if (reservation.calendarEventId) {
+    //     await updateReservationInCalendar(reservation.calendarEventId, reservation);
+    //   }
 
-    }
+    // }
 
     res.status(200).json({
       success: true,

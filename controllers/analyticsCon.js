@@ -1,13 +1,44 @@
 import { AnalyticsModel } from "../models/analytics.js";
+import { UserModel } from "../models/user.js";
+import { OrderModel } from "../models/order.js"
+import { v4 as uuidv4 } from "uuid"
 
 
 export const logEvent = async (req, res) => {
     try {
         // Extract event details from the request body
         const { userId, adminId, event, entityType, entityId, metadata, sessionId } = req.body;
+
+        // validate that the user exists
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(400).json({ error: "Invalid userId: User does not exist" });
+        }
+
+          // validate that the `entityId` exists in the database
+          let entityExists;
+          if (entityType === "order") {
+              entityExists = await OrderModel.findById(entityId);
+          }
+          // Add more conditions if tracking reservations, loyalty, etc.
+  
+          if (!entityExists) {
+              return res.status(400).json({ error: `Invalid entityId: No ${entityType} found with this ID` });
+          }
     
+        // auto-generate a session ID if none was provided
+        const generatedSessionId = sessionId || uuidv4(); 
+
         // Create and save the analytics entry
-        const newLog = await AnalyticsModel.create(req.body);
+        const newLog = await AnalyticsModel.create({
+          userId: user._id,
+          event,
+          entityType,
+          entityId,
+          metadata: metadata,  // Keep original metadata
+          sessionId,
+          adminId
+      });
     
         res.status(201).json({ message: 'Analytics event logged successfully', data: newLog });
       } catch (error) {
