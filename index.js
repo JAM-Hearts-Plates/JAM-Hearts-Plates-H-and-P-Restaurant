@@ -38,7 +38,7 @@ const allowedOrigin = ["http://localhost:5173"]
 
 const corsOptions = {
   origin: allowedOrigin,
-  // credentials: true,
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   //allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 };
@@ -57,7 +57,7 @@ const io = new Server(httpServer, {
   cors: {
     origin: allowedOrigin,
     methods: ["GET", "POST","PUT", "DELETE"],
-    // credentials: true
+    credentials: true
   },
   connectionStateRecovery: {
     maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
