@@ -1,11 +1,5 @@
 import { Router } from "express";
 import { forgotPassword, loginRider, loginUser, registerRider, registerUser, resetPassword } from "../controllers/authCon.js";
-import {
-  forgotPassword,
-  loginUser,
-  registerUser,
-  resetPassword,
-} from "../controllers/authCon.js";
 import { authenticateGoogle, googleCallback } from "../middlewares/auth.js";
 
 
