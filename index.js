@@ -6,8 +6,8 @@ import errorHandler from "./middlewares/errorHandler.js"
 import appError from "./utils/appError.js";
 import morgan from "morgan";
 import passport from "passport";
-import { createServer } from 'http';
-import { Server } from 'socket.io';
+// import { createServer } from 'http';
+// import { Server } from 'socket.io';
 
 // importing routes
 import authRoutes from "./routes/authRoutes.js";
@@ -44,7 +44,7 @@ const corsOptions = {
 };
 app.use(cors());
 
-const httpServer = createServer(app);
+// const httpServer = createServer(app);
 app.use('/webhooks', stripeRouter)
 
 app.use(express.json());
@@ -52,52 +52,50 @@ app.use(express.json());
 
 
 
-// Set up Socket.IO
-const io = new Server(httpServer, {
-  cors: {
-    origin: allowedOrigin,
-    methods: ["GET", "POST","PUT", "DELETE"],
-    credentials: true
-  },
-  connectionStateRecovery: {
-    maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
-    skipMiddlewares: true
-  }
-});
+// // Set up Socket.IO
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: allowedOrigin,
+//     methods: ["GET", "POST","PUT", "DELETE"],
+//     credentials: true
+//   },
+//   connectionStateRecovery: {
+//     maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
+//     skipMiddlewares: true
+//   }
+// });
 
 
 
 // Socket.IO connection handler
-const configureSocketIO = () => {
-io.on('connection', (socket) => {
-  console.log(`New client connected:, ${socket.id}`);
+// const configureSocketIO = () => {
+// io.on('connection', (socket) => {
+//   console.log(`New client connected:, ${socket.id}`);
   
    // Join room for order updates
-   socket.on('joinOrderRoom', (orderId) => {
-    socket.join(`order_${orderId}`);
-    console.log(`Socket ${socket.id} joined order_${orderId}`);
-  });
+//    socket.on('joinOrderRoom', (orderId) => {
+//     socket.join(`order_${orderId}`);
+//     console.log(`Socket ${socket.id} joined order_${orderId}`);
+//   });
 
-  // Handle real-time order updates
-  socket.on('orderUpdate', (data) => {
-    io.to(`order_${data.orderId}`).emit('orderStatusChanged', data);
-  });
+//   // Handle real-time order updates
+//   socket.on('orderUpdate', (data) => {
+//     io.to(`order_${data.orderId}`).emit('orderStatusChanged', data);
+//   });
 
-  socket.on('disconnect', () => {
-    console.log(`Client disconnected:, ${socket.id}`);
-  });
-});
+//   socket.on('disconnect', () => {
+//     console.log(`Client disconnected:, ${socket.id}`);
+//   });
+// });
 
 // Make io accessible to other modules
-app.set('io', io);
-}
+// app.set('io', io);
+// }
 
-configureSocketIO();
+// configureSocketIO();
 
 // middlewares
 // / Configure CORS middleware
-
-
 
 
 // Handle preflight requests
@@ -112,7 +110,7 @@ if (process.env.NODE_ENV === "development") {
 app.get('/', (req, res) => res.status(200).json({
   status: 'running',
   timestamp: new Date().toISOString(),
-  websockets: io.engine.clientsCount
+  // websockets: io.engine.clientsCount
 }));
 
 // initialize passport middleware**
@@ -143,9 +141,10 @@ app.use(errorHandler)
 
 // server listening
 const port = process.env.PORT || 4512
-httpServer.listen(port, () => {
-  console.log(`Hearts and Plates is ready to serve on port ${port}  WebSockets active on: ws://localhost:${port}`);
+app.listen(port, () => {
+  console.log(`Hearts and Plates is ready to serve on port ${port} 
+     WebSockets active on: ws://localhost:${port}`);
 });
 
 // Export getIO function
-export const getIO = () => io;
+// export const getIO = () => io;
