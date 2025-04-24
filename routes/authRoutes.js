@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { forgotPassword, loginUser, registerUser, resetPassword } from "../controllers/authCon.js";
+import { forgotPassword, loginRider, loginUser, registerRider, registerUser, resetPassword } from "../controllers/authCon.js";
 import { authenticateGoogle, googleCallback } from "../middlewares/auth.js";
 
 
@@ -13,6 +13,10 @@ authRoutes.post("/users/login", loginUser);
 authRoutes.post('/forgot-password', forgotPassword);
 
 authRoutes.post('/reset-password/:token', resetPassword);
+
+authRoutes.post("/riders/signup", registerRider);
+
+authRoutes.post("/riders/login", loginRider)
 
 
 //google OAuth routes

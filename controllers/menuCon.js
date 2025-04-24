@@ -2,13 +2,13 @@ import { MenuModel } from "../models/menu.js";
 import appError from "../utils/appError.js";
 import {
   addMenuValidator,
-  replaceMenuValidator,
+  replaceMenuValidator
 } from "../validators/menuVal.js";
 
 export const addMenu = async (req, res, next) => {
   try {
-    const pictures = req.files && req.files.length > 0 
-    ? req.files.map(file => file.filename):[]
+    const pictures = req.files && req.files.length > 0
+      ? req.files.map(file => file.filename) : []
 
     const { error, value } = addMenuValidator.validate({
       ...req.body,
@@ -29,6 +29,7 @@ export const addMenu = async (req, res, next) => {
     next(error);
   }
 };
+
 // get all menu items
 export const getMenuItems = async (req, res, next) => {
   try {
@@ -89,11 +90,13 @@ export const updateMenuItem = async (req, res, next) => {
   }
 };
 
+
+
 export const replaceMenuItem = async (req, res, next) => {
   try {
 
-    const pictures = req.files && req.files.length > 0 
-    ? req.files.map(file => file.filename):[]
+    const pictures = req.files && req.files.length > 0
+      ? req.files.map(file => file.filename) : []
 
     const { error, value } = replaceMenuValidator.validate({
       ...req.body,
@@ -104,7 +107,7 @@ export const replaceMenuItem = async (req, res, next) => {
     }
     const menuItem = await MenuModel.findOneAndReplace(
       { _id: req.params.id },
-      req.body,
+      value,
       { new: true }
     );
     res.status(200).json(menuItem);

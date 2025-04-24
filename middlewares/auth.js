@@ -23,9 +23,11 @@ passport.use(
         async (accessToken, refreshToken, profile, done) => {
             try {
                     // Check if user already exists in the database
-                    let user = await UserModel.findOne({ googleId: profile.id });
-
-                    if (!user) {
+                    let user = await UserModel.findOne({ 
+                        $or: [{ googleId: profile.id }, { email: profile.emails[0].value }] 
+                    });
+                    if (user) return done(null, user);
+                    
                         // If user does not exist, create a new user
                         user = new UserModel({
                             googleId: profile.id,
@@ -39,7 +41,6 @@ passport.use(
                         });
     
                         await user.save(); // Save the new user in the database
-                    }
 
                 return done(null, user);
             } catch (error) {
