@@ -1,4 +1,5 @@
 import { UserModel } from "../models/user.js";
+// import bcrypt from "bcrypt"
 import { updateUserValidator, userIdValidator } from "../validators/authVal.js";
 
 export const updateUser = async (req, res, next) => {
@@ -47,7 +48,7 @@ export const getUser = async (req, res, next) => {
         if (!result) {
             return res.status(404).json(error)
         }
-        res.status(201).json(result)
+        res.status(200).json(result)
                } catch (error) {
                 next(error)
             }
@@ -64,7 +65,7 @@ export const deleteUser = async (req, res, next) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        res.status(201).json({
+        res.status(200).json({
             message: "Successfully Deleted!",
             data: result
         })

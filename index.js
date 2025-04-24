@@ -21,9 +21,9 @@ import deliveryRoutes from "./routes/deliveryRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import tableRouter from "./routes/tableRoutes.js"
 import riderRoutes from "./routes/rider.js";
-import stripeRouter from "./routes/stripeWebhooks.js";
 import "./middlewares/auth.js"
 import vipRouter from "./routes/vipRoutes.js";
+
 
 
 // making a database connection
@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
   });
 });
 
+
 // middlewares
 app.use(cors());
 app.use(express.json());
@@ -80,6 +81,7 @@ app.use(analyticsRoutes)
 app.use(tableRouter)
 app.use(riderRoutes)
 app.use(vipRouter)
+
 
 // Handle undefined routes
 // app.all("*", (req, res, next) => {

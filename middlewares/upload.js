@@ -2,6 +2,9 @@ import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 
+// if (!process.env.CLOUDINARY_API_SECRET) {
+//   throw new Error("Missing Cloudinary API Secret in environment variables");
+// }
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -19,3 +22,5 @@ export const menuPicturesUpload = multer({
     },
   }),
 });
+
+
