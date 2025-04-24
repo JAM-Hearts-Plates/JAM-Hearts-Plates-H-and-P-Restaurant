@@ -22,17 +22,17 @@ export const registerUserValidator = Joi.object({
  ...vipValidator.userFields,
 //  includes vip fields from vipVal
 
-    firstName: Joi.string().regex(/^[A-Za-z]+$/).required(),
-    lastName: Joi.string().regex(/^[A-Za-z]+$/).required(),
-    userName: Joi.string().required(),
-    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
-    password: Joi.string().required(),
-    confirmPassword: Joi.string().valid(Joi.ref('password')),
-    phone: Joi.string(),
+    // fullName: Joi.string().regex(/^[A-Za-z]+$/).required(),
+    // // lastName: Joi.string().regex(/^[A-Za-z]+$/).required(),
+    // userName: Joi.string().required(),
+    // email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+    // password: Joi.string().required(),
+    // confirmPassword: Joi.string().valid(Joi.ref('password')),
+    // phone: Joi.string(),
 
-    role: Joi.string().valid('user', 'manager', 'ceo', 'chef', 'waitstaff', 'finance', "admin").optional(), //Role is optional, default to 'user' if not set/chosen/selected
+    // role: Joi.string().valid('user', 'manager', 'ceo', 'chef', 'waitstaff', 'finance', "admin").optional(), //Role is optional, default to 'user' if not set/chosen/selected
 
-    role: Joi.string().valid('user', 'manager', 'ceo', 'chef', 'waitstaff', 'finance', 'admin').optional() //Role is optional, default to 'user' if not set/chosen/selected
+    // role: Joi.string().valid('user', 'manager', 'ceo', 'chef', 'waitstaff', 'finance', 'admin').optional() //Role is optional, default to 'user' if not set/chosen/selected
 
 
 }).with("password", "confirmPassword");
@@ -44,12 +44,13 @@ export const loginUserValidator = Joi.object({
 });
 
 export const updateUserValidator = Joi.object({
-  firstName: Joi.string()
+  fullName: Joi.string()
     .regex(/^[A-Za-z]+$/)
     .optional(),
-  lastName: Joi.string()
-    .regex(/^[A-Za-z]+$/)
-    .optional(),
+  // lastName: Joi.string()
+  //   .regex(/^[A-Za-z]+$/)
+  //   .optional(),
+  userName: Joi.string().required(),
   email: Joi.string().optional(),
   password: Joi.string().optional(),
   phone: Joi.string().optional(),
