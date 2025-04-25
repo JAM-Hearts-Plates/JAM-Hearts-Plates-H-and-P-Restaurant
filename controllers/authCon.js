@@ -29,8 +29,8 @@ export const registerUser = async (req, res) => {
 
     // Create user record in database
     const newUser = await UserModel.create({
-        firstName: value.firstName,
-        lastName: value.lastName,
+        fullName: value.fullName,
+        // lastName: value.lastName,
         userName: value.userName,
         email: value.email,
         password: hashedPassword,
