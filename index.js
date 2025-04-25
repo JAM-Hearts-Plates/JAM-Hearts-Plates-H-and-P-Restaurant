@@ -6,8 +6,8 @@ import errorHandler from "./middlewares/errorHandler.js"
 import appError from "./utils/appError.js";
 import morgan from "morgan";
 import passport from "passport";
-// import { createServer } from 'http';
-// import { Server } from 'socket.io';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 // importing routes
 import authRoutes from "./routes/authRoutes.js";
@@ -26,6 +26,7 @@ import vipRouter from "./routes/vipRoutes.js";
 
 
 
+
 // making a database connection
 await mongoose.connect(process.env.MONGO_URI);
 
@@ -40,59 +41,73 @@ const corsOptions = {
   origin: allowedOrigin,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  //allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 };
-app.use(cors());
+app.use(cors(corsOptions));
 
-// const httpServer = createServer(app);
+
 app.use('/webhooks', stripeRouter)
 
 app.use(express.json());
 
+// using routes
+app.use(authRoutes);
+app.use(userRoutes)
+app.use(menuRouter)
+app.use(orderRouter)
+app.use(reservationRouter)
+app.use(loyaltyRoutes)
+app.use(inventoryRouter)
+app.use(deliveryRoutes)
+app.use(analyticsRoutes)
+app.use(tableRouter)
+app.use(riderRoutes)
+app.use(vipRouter)
 
 
+const httpServer = createServer(app);
 
-// // Set up Socket.IO
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: allowedOrigin,
-//     methods: ["GET", "POST","PUT", "DELETE"],
-//     credentials: true
-//   },
-//   connectionStateRecovery: {
-//     maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
-//     skipMiddlewares: true
-//   }
-// });
+// Set up Socket.IO
+const io = new Server(httpServer, {
+  cors: {
+    origin: allowedOrigin,
+    methods: ["GET", "POST","PUT", "DELETE"],
+    credentials: true
+  },
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
+    skipMiddlewares: true
+  }
+});
 
 
 
 // Socket.IO connection handler
-// const configureSocketIO = () => {
-// io.on('connection', (socket) => {
-//   console.log(`New client connected:, ${socket.id}`);
+const configureSocketIO = () => {
+io.on('connection', (socket) => {
+  console.log(`New client connected:, ${socket.id}`);
   
    // Join room for order updates
-//    socket.on('joinOrderRoom', (orderId) => {
-//     socket.join(`order_${orderId}`);
-//     console.log(`Socket ${socket.id} joined order_${orderId}`);
-//   });
+   socket.on('joinOrderRoom', (orderId) => {
+    socket.join(`order_${orderId}`);
+    console.log(`Socket ${socket.id} joined order_${orderId}`);
+  });
 
 //   // Handle real-time order updates
-//   socket.on('orderUpdate', (data) => {
-//     io.to(`order_${data.orderId}`).emit('orderStatusChanged', data);
-//   });
+  socket.on('orderUpdate', (data) => {
+    io.to(`order_${data.orderId}`).emit('orderStatusChanged', data);
+  });
 
-//   socket.on('disconnect', () => {
-//     console.log(`Client disconnected:, ${socket.id}`);
-//   });
-// });
+  socket.on('disconnect', () => {
+    console.log(`Client disconnected:, ${socket.id}`);
+  });
+});
 
 // Make io accessible to other modules
-// app.set('io', io);
-// }
+app.set('io', io);
+}
 
-// configureSocketIO();
+configureSocketIO();
 
 // middlewares
 // / Configure CORS middleware
@@ -116,19 +131,6 @@ app.get('/', (req, res) => res.status(200).json({
 // initialize passport middleware**
 app.use(passport.initialize()); // Required for Google OAuth authentication
 
-// using routes
-app.use(authRoutes);
-app.use(userRoutes)
-app.use(menuRouter)
-app.use(orderRouter)
-app.use(reservationRouter)
-app.use(loyaltyRoutes)
-app.use(inventoryRouter)
-app.use(deliveryRoutes)
-app.use(analyticsRoutes)
-app.use(tableRouter)
-app.use(riderRoutes)
-app.use(vipRouter)
 
 
 // Handle undefined routes
